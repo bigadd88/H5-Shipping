@@ -1,0 +1,52 @@
+<div id=topBody>
+    <div class='card'>
+        <h3 class='card-header text-center font-weight-bold text-uppercase py-4'>New Pick</h3>
+        <div class='card-body'>
+            <div id='table' class='table'> 
+                <span class='table-add float-right mb-3 mr-2'>
+                    <button class='btn btn-success btn-rounded btn-sm my-0' onClick='addInventoryItem();'>Add Item</button>
+                </span>
+                <table id='tableInventory' class='table table-bordered table-responsive-md table-striped text-center'>
+                    <thead>
+                        <tr>
+                            <th class='text-center'>Item</th>
+                            <th class='text-center'>Quanity</th>
+                            <th class='text-center'>Price</th>
+                            <th class='text-center'>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody id='tableBody'>
+                        <!-- Rows are inserted here -->
+                    </tbody>
+                </table>
+                <div>
+                    <span class='table-add float-right mb-3 mr-2'>
+                        <button type='button' onClick='savePickRecord();' class='btn btn-success btn-rounded btn-sm my-0'>Save Pick</button>
+                    </span>
+                    <span class='table-add float-right mb-3 mr-2'></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='formLabel'>Customer</div>
+    <select id='customerSelectId' class='browser-default custom-select'></select>
+    <div class='formLabel'>Select Date</div>
+    <div class='md-form'> 
+        <input type='date' id='date-picker-example' class='form-control datepicker'>
+        <label for='date-picker-example'></label>
+    </div>
+</div>
+<div style='position: relative;width: 330px;height: 364px;-moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;user-select: none;'>
+    <img src='https://1212003.app.netsuite.com/core/media/media.nl?id=698005&c=1212003&h=cc55a162848b1f2662f9' style='position: absolute;left: 0;top: 0;' width=330 height=364 />
+    <canvas id='signature-pad' style='position: absolute;left: 0;top: 0;width:330px;height:364px;' width=330 height=364></canvas>
+</div>
+<div>
+    <button id='save'>Save</button><button id='clear'>Clear</button>
+</div>
+<!-- start buttons that live at bottom of page -->
+<div>
+    <button type='button' class='btn btn-dark btn-lg btn-block' onClick='goMenu();'>Menu Page</button>
+    <button type='button' class='btn btn-dark btn-lg btn-block' onClick='goCatalogue();'> Go to Catalog Page</button>
+    <button type='button' class='btn btn-dark btn-lg btn-block' onClick='goReorder();'> Inventory Transfer Page</button>
+    <div id=user class='mx-auto'></div>
+</div>

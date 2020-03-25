@@ -1,0 +1,169 @@
+//https://wwwcie.ups.com/rest/Rate
+
+function rateGen(request, response){var url = 'https://wwwcie.ups.com/rest/Rate';
+    var shipperName = 'Andy Reeder';
+    var shipperNum = '5V717Y';
+    var addressLine1 = '200 Gregg St.';
+    var addressLine2 = '';
+    var addressLine3 = '';
+    var shipperCity = 'Grain Valley';
+    var shipperState = 'MO';
+    var shipperZip = '64029-0207';
+    var shipperCountry = 'US';
+    var destName = 'Turd Furgeson';
+    var destAddLine1 = '9750 Quivira Rd';
+    var destAddLine2 = '';
+    var destAddLine3 = '';
+    var destCity = 'Lenexa';
+    var destState = 'KS';
+    var destZip = '66214';
+    var destCountry = 'US';
+    var fromName = 'Andy Reeder';
+    var fromAddLine1 = '200 Gregg St.';
+    var fromAddLine2 = '';
+    var fromAddLine3 = '';
+    var fromCity = 'Grain Valley';
+    var fromState = 'MO';
+    var fromZip = '64029';
+    var fromCountry = 'US';
+	var security = secGen();
+	var headers = "content-type: application/json";
+	var pload =  '{ ' + 
+						security +
+					   '"RateRequest": {' +
+						 '"Request": {' +
+						  '"RequestOption":"Shop"' +
+						'},' +
+						'"Shipment": {' + 
+						'"Shipper": {' + 
+						'"Name": "' + shipperName + '",' +
+						'"ShipperNumber": "' + shipperNum + '",' +
+						'"Address": {' +
+						'"AddressLine": [' +
+						'"' + addressLine1 + '",' +
+						'"' + addressLine2 + '",' +
+						'"' + addressLine3 + '"' +
+						'],' +
+						'"City": "' + shipperCity + '",' +
+						'"StateProvinceCode": "' + shipperState + '",' +
+						'"PostalCode": "' + shipperZip + '",' +
+						'"CountryCode": "' + shipperCountry + '"' +
+					  		'}' +
+					  	'},' +
+					  	'"ShipTo":{' +
+					  	'"Name": "' + destName + '",' +
+					  	'"Address": {' +
+					  	'"AddressLine": [' +
+						'"' + destAddLine1 + '",' +
+						'"' + destAddLine2 + '",' +
+						'"' + destAddLine3 + '"' +
+						'],' + 
+					  	'"City": "' + destCity + '",' +
+						'"StateProvinceCode": "'+ destState + '",' +
+						'"PostalCode": "' + destZip + '",' +
+						'"CountryCode": "' + destCountry + '"' +
+					  		'}' +
+					  	'},' +
+					  	'"ShipFrom":{' +
+					  	'"Name": "' + fromName + '",' +
+					  	'"Address": {' +
+					  	'"AddressLine": [' +
+						'"' + fromAddLine1 + '",' +
+						'"' + fromAddLine2 + '",' +
+						'"' + fromAddLine3 + '"' +
+						'],' + 
+					  	'"City": "' + fromCity + '",' +
+						'"StateProvinceCode": "' + fromState + '",' +
+						'"PostalCode": "' + fromZip + '",' +
+						'"CountryCode": "' + fromCountry + '"' +
+					  		'}' +
+					  	'},' +
+					  	'"Service": {' +
+					  	'"Code": "' + 03 + '",' +
+					  	'"Description": "Service Code Description"' +
+					  	'},' +
+					  	'"Package": {' +
+					  	'"PackagingType": {' +
+					  	'"Code": "02",' +
+					  	'"Description": "Rate"' +
+					  	'},' +
+					  	'"Dimensions": {' +
+					  	'"UnitOfMeasurement": {' +
+					  	'"Code": "IN",' +
+					  	'"Description": "inches"' +
+					  	'},' +
+					  	'"Length": "5",' +
+					  	'"Width": "4",' +
+					  	'"Height": "3"' +
+					  	'},' +
+        				'"PackageWeight": {' +
+				        '"UnitOfMeasurement": {' +
+        				'"Code": "Lbs",' +
+        				'"Description": "pounds"' +
+        				'},' +
+					  	'"Weight": "3"' +
+                       	'},' +
+                        '"ShipmentRatingOptions": {' +
+                        '"NegotiatedRatesIndicator": ""' +
+                        '}' +
+                       '}' +
+                      '}' +
+                     '}' +
+                    '}';
+
+	nlapiLogExecution('DEBUG', 'Payload', pload);
+	var message = nlapiRequestURL(url, pload, headers);
+
+	if (message.getCode()==200){
+      nlapiLogExecution('DEBUG', 'UPS Response Code', 'Response code is: ' + message.getCode());
+		var obj = JSON.parse(message.getBody());
+        var serLevel = new Array();
+        var billWeight = new Array();
+        var transDays = new Array();
+        var transTime = new Array();
+        var totMonVal = new Array();
+        var linItem = new Array();
+      	nlapiLogExecution('DEBUG', 'UPS Response Object', '$' + obj.RateResponse.RatedShipment.length);
+      	for (i = 0; i < parseInt(obj.RateResponse.RatedShipment.length); i++){
+          var serLevel = obj.RateResponse.RatedShipment[i].Service.Code;
+          var billWeight = obj.RateResponse.RatedShipment[i].BillingWeight.Weight;
+          if(obj.RateResponse.RatedShipment[i].hasOwnProperty('GuaranteedDelivery')){
+             var transDays = obj.RateResponse.RatedShipment[i].GuaranteedDelivery.BusinessDaysInTransit;
+             } else var transDays = '';
+          var totMonVal = obj.RateResponse.RatedShipment[i].TotalCharges.MonetaryValue;
+          linItem += '<tr><td>' + serLevel + '</td><td>' + transDays + ' ' + transTime + '</td><td>' + billWeight + '</td><td>$' + totMonVal + '</td></tr>';
+        }
+
+        var html = '<head></head>';
+        html += '<body><table style="width: 100%">';
+        html += '<th>Service Level</th>';
+        html += '<th>Transit Days</th>';
+        html += '<th>Billing Weight</th>';
+        html += '<th>Total Cost</th>';
+        html += linItem;
+        html += '</table></body>';
+
+        response.write(html);
+        nlapiLogExecution('DEBUG', 'RatePass Created!', 'Returned rates are: '+ totMonVal);
+	}
+	else{
+		nlapiLogExecution('DEBUG', 'UPS Response Code', 'Response Code: ' + message.getCode());
+	}
+}
+
+function secGen(){
+    var upsUsername = "robertpriority";
+    var upsPassword = "Priority!";
+    var upsToken = "1D359770AE6B7148";
+    var upsAccount = "5V717Y";
+	var s = '"Security": {' +
+				'"UsernameToken": {'+
+				  '"Username": "' + upsUsername + '",' +
+				  '"Password": "' + upsPassword + '"' +
+				'},' +
+				'"UPSServiceAccessToken": {' +
+				  '"AccessLicenseNumber": "' + upsToken + '"' +
+				'}' +
+			  '},';
+	return s;
+}

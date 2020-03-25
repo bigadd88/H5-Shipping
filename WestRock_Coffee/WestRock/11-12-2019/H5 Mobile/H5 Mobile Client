@@ -1,0 +1,100 @@
+function getToday(){
+  var todayDate = new Date();
+  var dateField = document.getElementById('logindate');
+  dateField.placeholder = todayDate;
+}
+function toMenu(){
+  var uName = document.getElementById('uname').value;
+  var pWord = document.getElementById('pword').value;
+  var slUrl = 'https://1212003.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=951&deploy=1&compid=1212003&h=16e360c6c7551d387b69';
+  slUrl += '&username=' + uName;
+  slUrl += '&password=' + pWord;
+  var logReq = nlapiRequestURL(slUrl);
+  var respBody = logReq.getBody();
+  if (respBody = 200){
+    //swal('Welcome ' + uName + ' enjoy your day!');
+    window.location = 'https://1212003.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=949&deploy=1&compid=1212003&h=bd2d6268ecad99d78bbd';
+  }
+  else {
+  //  swal('You have entered invalid credentials, please try again.');
+  }
+}
+function getWOID(){
+  return document.getElementById('wonumber').value;
+}
+function to_QA_Lab(){
+  // Mobile Lab Has the woId Hard coded in init
+    var woId = getWOID();
+    // this needs to change the WOID to an internal ID
+    var location = 'https://1212003.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=958&deploy=1&compid=1212003&h=2fc50d726ff95b184a8e&?id='
+    location += woId
+    nlapiLogExecution('DEBUG', 'Gone to QA Lab', 'Lab Sample Button has been Pushed!');
+    window.location = location;
+}
+
+
+function QA_Lab(id){
+    // hard coded woid !!!!!!
+    nlapiLogExecution('DEBUG', 'Gone to QA', 'Lab Sample Button has been Pushed! ');
+    var url = 'https://1212003.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=947&deploy=1&compid=1212003&h=9e6c99113e128b3875c0';
+    url += '&woid='+id;
+    console.log(url);
+
+    var reqObj = nlapiRequestURL(url);
+    var respObj = reqObj.getBody();
+    var newSampleRecord = nlapiLoadRecord('customrecord_h5_qve_sample_record',respObj);
+    console.log(newSampleRecord);
+    // set respObj and Workorder or test type
+    var obj = newSampleRecord.lineitems.recmachcustrecord_h5_sample_parent_id;
+    var tabledata1 = "";
+    for(i=1;i<obj.length;i++){
+        // build table
+        if(obj[i].custrecord_h5_min != null){
+          tabledata1 += "<tr>  <td>"+ obj[i].custrecord_h5_test +"</td> <td>"+obj[i].custrecord_h5_min+":"+ obj[i].custrecord_h5_max +" </td> <td><input id='ValueBox'></input></td> </tr>";
+        } else {
+        tabledata1 += "<tr>   <td>"+ obj[i].custrecord_h5_test +"</td> <td></td> <td><input type='Checkbox' id='Checkbox'></input></td> </tr>";
+      }
+    }
+
+  //  var tabledata1 = "<tr> <td><input type='Checkbox' id='Checkbox'></input></td> <td>"+ "Testing Test" +"</td>  <td><input align='right' id='ValueBox'></input></td> </tr>";
+    BuildTable(tabledata1);
+}
+
+function BuildTable(data){
+  var tableBlock1 =  "<div id='myTable' class='table-responsive' sytle='width:100%'>"
+                +"<table id='tablecontainer' class='table-responsive table-hover'>"
+                +"<thead>"
+                    +"<tr><th><p align='Left'>Test</p></th><th><p >Range of Value</p></th><th><p >Value</p></th></tr>"
+                    //<th><p align='Left'>PASS/FAIL</p></th>
+                +"</thead>"
+                +"<tbody>"
+                   + data
+                +"</tbody>"
+              +"</table>"
+              +"</div>";
+    document.getElementById("tableBlock1").innerHTML = tableBlock1;
+}
+function LoadQA(text){
+  var newSampleRecord = nlapiLoadRecord('customrecord_h5_qve_sample_record',respObj);
+  if(text=='brew'){
+  // fill table to brew
+  }
+  if(text=='Lab'){
+  //  Fill Table to lab
+  }
+}
+
+function QA_Brewtest(){
+}
+function QA_timeTest(){
+}
+function woInquiry(){
+    var woid = getWOID();
+    var url = 'https://1212003.app.netsuite.com/app/site/hosting/scriptlet.nl?script=930&deploy=1&compid=1212003&woid='
+    url += woid
+    window.location = url;
+}
+
+function buildNav(){
+  document.getElementById('navi').innerHTML = "<nav class='navbar navbar-dark' style='background-color: #A22A2F'> <a class='navbar-brand' style='color: white'>WestRock QA Mobile</a></nav>";
+}

@@ -1,0 +1,57 @@
+function invCreator(request, response){
+    //taking the requested data from SubmitInvoice button and forming it as a variable
+//var invStringData = request.getParameter('body');
+var invStringData = `{"date":"2020-03-12T17:47:22.120Z","customer":"3687411","lineItems":[{"qty":20,"price":19.4,"total":388,"item":"3912"}]}`;
+
+//taking the data(string) and turning it into a JSON object
+var newJson = JSON.parse(invStringData);
+var date = new Date();
+var day = date.getDate();
+var month = date.getMonth() +1;
+var year = date.getFullYear();
+var netDate = month +'/'+ day +'/'+ year;
+
+var lineItems = newJson.lineItems;
+//create a new invoice record
+var invoice = nlapiCreateRecord('invoice', {recordmode: 'dynamic'});
+
+//adding fields to form record, custom form, customer, date, posting period, location
+
+invoice.setFieldValue('trandate', netDate);
+invoice.setFieldValue('entity', newJson.customer);
+invoice.setFieldValue('subsidiary', 6);
+invoice.setFieldValue('location', 65)
+
+//loop through the array of lineItems(qty: 20, price: 19.4, F02)
+//Add price level for specific customer loook up
+
+for(h = 0; h < lineItems.length; h++){
+    invoice.selectNewLineItem('item');
+    invoice.setCurrentLineItemValue('item', 'quantity', lineItems[h].qty);
+    invoice.setCurrentLineItemValue('item', 'rate', lineItems[h].price);
+    invoice.setCurrentLineItemValue('item', 'item', lineItems[h].item);
+    invoice.setCurrentLineItemValue('item', 'pricelevel', priceLevel);
+    invoice.setCurrentLineItemValue('item', 'location', 65);
+
+    var compSubRecord = invoice.createCurrentLineItemSubrecord('item', 'inventorydetail');
+       compSubRecord.selectNewLineItem('inventoryassignment');
+       compSubRecord.setCurrentLineItemValue('inventoryassignment', 'recieptinventorynumber', 'testserial');
+       compSubRecord.setCurrentLineItemValue('inventoryassignment', 'quantity', lineItems[h].qty);
+       compSubRecord.setCurrentLineItemValue('inventoryassignment', 'binnumber', ' ');
+
+       compSubRecord.commitLineItem('inventoryassignment');
+       compSubRecord.commit();
+           
+
+
+
+    invoice.commitLineItem('item');
+
+
+    }
+ 
+}
+var newInvoiceId = nlapiSubmitRecord(invoice);
+return newInvoiceId;
+
+}

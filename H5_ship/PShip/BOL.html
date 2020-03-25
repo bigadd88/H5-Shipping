@@ -1,0 +1,197 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+    <link name="verdana" type="font" subtype="opentype" src="${nsfont.verdana}" src-bold="${nsfont.verdana_bold}" bytes="2" />
+    <style type="text/css">table {
+            font-family: stsong, sans-serif;
+            font-family: msung, sans-serif;
+            font-family: heiseimin, sans-serif;
+            font-family: hygothic, sans-serif;
+            font-family: verdana;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+        }
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            vertical-align: middle;
+            padding: 5px 6px 3px;
+            background-color: #e2eaf0;
+            color: #333333;
+        }
+        td {
+            padding: 4px 6px;
+        }
+</style>
+</head>
+<body padding="0.9in 0.5in 0.1in 0.5in" size="Letter">
+    <table style="width: 100%; font-size: 10pt;"><tr>
+	<td><b>Bill Of Lading - Short From - Not Negotiable</b></td>
+	<td><b>BOL Number:&nbsp;${recName}</b></td>
+	</tr></table>
+
+<table style="width: 100%; font-size: 10pt;"><tr>
+	<td valign="top">
+	<table style="width: 100%; font-size: 10pt;"><tr>
+		<th>Ship From</th>
+		</tr>
+		<tr>
+		<td>${record.custbody16}<br />
+          Shipping Contact:   ${record.custbody35}<br/>
+       Shipping Phone:   ${record.custbody57}<br/></td>
+		</tr></table>
+
+	<table style="width: 100%; font-size: 10pt;"><tr>
+		<th>Ship To</th>
+		</tr>
+		<tr>
+		<td>${record.custbody18}<br/>
+          Consignee Contact:   ${record.custbody59}<br/>
+       Consignee Phone:   ${record.custbody60}<br/></td>
+		</tr></table>
+
+	<table style="width: 100%; font-size: 10pt;"><tr>
+		<th>BILL 3rd PARTY PREPAID TO:</th>
+		</tr>
+		<tr>
+		<td>Priority Logistics, Inc.<br/>PO Box 26682<br/>Overland Park, KS 66225</td>
+		</tr></table>
+	</td>
+	<td valign="top">
+	<table style="width: 100%; font-size: 10pt;">
+      <tr><th>Carrier Information:</th></tr>
+      <tr><td style="padding-left: 22px; font-size: 14pt;"><b>${record.custbody7}</b></td></tr>
+		<tr><td style="border:1px">Carrier PRO#: &nbsp;${record.custbody23}</td></tr>
+        <tr><td style="border:1px">Trailer #: &nbsp;${record.custbody39}</td></tr>
+        <tr><td style="border:1px">Seal #: &nbsp;${record.custbody37}</td></tr>
+		<tr><td style="border:1px">Pickup Date: &nbsp;${record.custbody3}</td></tr>
+      </table>
+
+	<table style="width: 100%; font-size: 10pt;"><tr>
+		<th>References</th>
+		</tr>
+		<tr>
+		<td style="border:1px">Origin Reference #:&nbsp;${record.custbody33} </td>
+		</tr>
+      <tr>
+		<td style="border:1px">Destination Reference #:&nbsp;${record.custbody34}</td>
+		</tr>
+      </table>
+
+	<table style="width: 100%; font-size: 10pt;"><tr>
+		<th>Accessorials</th>
+		</tr>
+		<tr>
+		<td>${record.custbody45}</td>
+		</tr></table>
+	</td>
+	</tr></table>
+<table style="width: 100%; height:50px; font-size: 10pt;border:1px"><tr>
+	<td valign="top"><b>SPECIAL INSTRUCTIONS: &nbsp;{pri_special_instructions}</b></td>
+	</tr>
+  </table>
+      <table style="width:100%;margin-top: 10px;">
+  <thead>
+	<tr>
+    <th style="padding: 4px 4px;width:100px;text-align:left">HAZMAT</th>
+    <th style="padding: 4px 4px;width:75px;text-align:left">Pallet Count</th>
+    <th style="padding: 4px 4px;width:45px;text-align:left">Pieces</th>
+    <th style="padding: 4px 4px;width:75px;text-align:left">Type</th>  
+	<th style="padding: 4px 4px;width:225px;text-align:left">Item Description</th>
+    <th style="padding: 4px 4px;width:50px;text-align:left">Weight</th>      
+
+	
+	
+	</tr>
+</thead>      
+    <tr>
+	<td>${item.custcol7}</td>
+    <td>${item.custcol12}</td>
+    <td>${item.custcol10}</td>
+    <td>${item.custcol1}</td>
+	<td>${item.description}</td>
+    <td>${item.custcol3}</td>
+
+	
+	</tr>     
+  </#if>
+	</#list><!-- end items -->
+  </#if>
+    <tr style="border:1px">
+	<td></td>
+	<td></td>
+	<td></td>
+    <td></td>
+	<td><b>Total Weight</b></td>
+	<td><b>${record.custbody43}</b></td>
+	</tr>          
+  </table>
+<table style="width: 100%; font-size: 8pt;border:1px"><tr>
+	<td valign="top"><span>*Mark with an X to designate hazardous materials as defines in title 49 of the code of Federal Regulations.</span></td>
+	</tr>
+	<tr>
+	<td valign="top"><b>Hazmat emergency contact #</b></td>
+	</tr></table>
+
+<table cellpadding="0" cellspacing="0" style="width: 100%; font-size: 8pt;border:1px"><tr>
+	<td valign="top">Where the rate is dependent on value, shippers are required to state specifically in writing the agreed or declared value of the property as follows: &quot;The agreed or declared value of the property is specifically stated by the shipper to be not exceeding ___________ per ___________.&quot;</td>
+	</tr></table>
+
+<table style="width: 100%; font-size: 8pt;border:1px"><tr>
+	<td><b>Note: Liability limitation for loss or damage in this shipment may be applicable. See 49 USC 14706(c)(1)(A) and (B)</b></td>
+	</tr></table>
+
+<table style="width: 100%; font-size: 8pt;border:1px"><tr>
+	<td valign="top">
+	<table style="width: 100%;"><tr>
+		<td><b>For Freight Collect Shipments</b></td>
+		</tr>
+		<tr>
+		<td>If this shipment is to be delivered to the consignee, without recourse on the consignor, the consignor shall sign the following statement, The carrier may decline to make dekivery of this shipment without payment of freight and all other lawful charges.</td>
+		</tr>
+		<tr>
+		<td>Signature of Consignor:___________________________</td>
+		</tr>
+		<tr>
+		<td><b>Shipper Signature / Date</b></td>
+		</tr>
+		<tr>
+		<td>This is to certify that the above named materials are properly classified packaged, marked and labeled, and are in proper condition for transportation according to the applicable regulations of the Department of Transportation.</td>
+		</tr>
+		<tr>
+		<td>Signature of Shipper: _______________ Date:____________</td>
+		</tr></table>
+	</td>
+	<td valign="top">
+
+
+	<table style="width: 100%;"><tr>
+		<td><b>Carrier Signature/Date</b></td>
+		</tr>
+		<tr>
+		<td>Carrier acknowledges receipt of packages and required placards. Carrier certifies emergency response information was made available and/or carrier has the Department of Transportation emergency response guidebook or equivelant documentation in the vehicle. Property described above is received in good order, except as noted.</td>
+		</tr>
+		<tr>
+		<td>Carrier:_____________________ Date:______________</td>
+		</tr></table>
+	<table style="width: 100%;">
+      <tr>
+		<td><b>Receiver Signature/Date</b></td>
+		</tr>
+		<tr>
+		<td>Received in good condition without shortages or damages.</td>
+		</tr>
+		<tr>
+          <td>Receiver/Consignee:________________________</td>
+          </tr><tr>
+          <td>Date:___________________________</td>
+		</tr></table>
+	</td>
+	</tr>
+  </table>
+  <table>
+    <tr><td><b>BOL Number:&nbsp;${record.custbody36}</b></td></tr>
+  </table>
+</body>
+</pdf>

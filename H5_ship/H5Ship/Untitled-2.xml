@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Body>
+        <GetRateQuoteResponse xmlns="http://www.rlcarriers.com/">
+            <GetRateQuoteResult>
+                <WasSuccess>true</WasSuccess>
+                <Messages>
+                    <string>Origin city () was not valid. The default city (LENEXA) has been used.</string>
+                    <string>Destination city () was not valid. The default city (WARREN) has been used.</string>
+                    <string>Origin state () was not valid. The default state (KS) has been used.</string>
+                    <string>Destination state () was not valid. The default state (AR) has been used.</string>
+                </Messages>
+                <Result>
+                    <Origin>
+                        <City>LENEXA</City>
+                        <StateOrProvince>KS</StateOrProvince>
+                        <ZipOrPostalCode>66227</ZipOrPostalCode>
+                        <CountryCode>USA</CountryCode>
+                    </Origin>
+                    <Destination>
+                        <City>WARREN</City>
+                        <StateOrProvince>AR</StateOrProvince>
+                        <ZipOrPostalCode>71671</ZipOrPostalCode>
+                        <CountryCode>USA</CountryCode>
+                    </Destination>
+                    <OriginServiceCenter>
+                        <Code>KAN</Code>
+                        <Location>Kansas City, MO</Location>
+                        <ZipCode>64161</ZipCode>
+                        <Phone>1-800-685-2440</Phone>
+                        <Address1>4055 N. Pleasant Ave.</Address1>
+                        <Address2 />
+                        <City>Kansas City</City>
+                        <State>MO</State>
+                    </OriginServiceCenter>
+                    <DestinationServiceCenter>
+                        <Code>LRA</Code>
+                        <Location>Little Rock, AR</Location>
+                        <ZipCode>72209</ZipCode>
+                        <Phone>1-800-799-0184</Phone>
+                        <Address1>8606 Mabelvale Pike</Address1>
+                        <Address2 />
+                        <City>Little Rock</City>
+                        <State>AR</State>
+                    </DestinationServiceCenter>
+                    <CustomerDiscounts>$1,536.78</CustomerDiscounts>
+                    <Charges>
+                        <Charge>
+                            <Type />
+                            <Title>Class: 50</Title>
+                            <Weight>1500</Weight>
+                            <Rate>$110.52</Rate>
+                            <Amount>$1,657.80</Amount>
+                        </Charge>
+                        <Charge>
+                            <Type>GROSS</Type>
+                            <Title>Gross Charge</Title>
+                            <Weight>1500</Weight>
+                            <Rate />
+                            <Amount>$1,657.80</Amount>
+                        </Charge>
+                        <Charge>
+                            <Type>DISCNT</Type>
+                            <Title>R+L Discount Saves This Much</Title>
+                            <Weight />
+                            <Rate>92.7%</Rate>
+                            <Amount>$1,536.78</Amount>
+                        </Charge>
+                        <Charge>
+                            <Type>DISCNF</Type>
+                            <Title>Discounted Freight Charge</Title>
+                            <Weight />
+                            <Rate />
+                            <Amount>$121.02</Amount>
+                        </Charge>
+                        <Charge>
+                            <Type>FUEL</Type>
+                            <Title>Fuel Surcharge</Title>
+                            <Weight />
+                            <Rate>18.1%</Rate>
+                            <Amount>$21.90</Amount>
+                        </Charge>
+                        <Charge>
+                            <Type>NET</Type>
+                            <Title>Net Charge</Title>
+                            <Weight />
+                            <Rate />
+                            <Amount>$142.92</Amount>
+                        </Charge>
+                    </Charges>
+                    <Messages>
+                        <Message>
+                            <Title />
+                            <Text>Transit Message</Text>
+                        </Message>
+                        <Message>
+                            <Title />
+                            <Text>Special Message For Destination Zip: * SERVICE ON TUESDAY, WEDNESDAY &amp; THURSDAY ONLY *</Text>
+                        </Message>
+                        <Message>
+                            <Title />
+                            <Text>General Message</Text>
+                        </Message>
+                        <Message>
+                            <Title />
+                            <Text>* Not to Exceed 20 Feet or 20,000 Lbs.</Text>
+                        </Message>
+                        <Message>
+                            <Title />
+                            <Text>Note: Some residential deliveries may require additional days of service.</Text>
+                        </Message>
+                        <Message>
+                            <Title />
+                            <Text>* This quote is based on information you provide. The actual charges shall be determined by actual shipment characteristics, and any accessorial charges that are applicable to the shipment at time of shipment.</Text>
+                        </Message>
+                        <Message>
+                            <Title />
+                            <Text>For classes higher than 300, contact the Rate department at 800-535-1983.</Text>
+                        </Message>
+                        <Message>
+                            <Title />
+                            <Text>Please note that a sufferance and in-bond storage charges accumulated in the customs process are the responsibility of the debtor of the freight charges.</Text>
+                        </Message>
+                        <Message>
+                            <Title />
+                            <Text>This rate is not applicable to tradeshows. Please contact our Rate Specialist at 800-535-1983 for more information.</Text>
+                        </Message>
+                    </Messages>
+                    <ServiceLevels>
+                        <ServiceLevel>
+                            <Title>Standard Service</Title>
+                            <Code>STD</Code>
+                            <QuoteNumber>15637296</QuoteNumber>
+                            <ServiceDays>3</ServiceDays>
+                            <Charge>$1,657.80</Charge>
+                            <NetCharge>$142.92</NetCharge>
+                        </ServiceLevel>
+                    </ServiceLevels>
+                </Result>
+            </GetRateQuoteResult>
+        </GetRateQuoteResponse>
+    </soap:Body>
+</soap:Envelope>

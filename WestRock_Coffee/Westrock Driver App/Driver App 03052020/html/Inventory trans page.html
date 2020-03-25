@@ -1,0 +1,84 @@
+<div id=topBody>
+
+    <div class='card'>
+        <h3 class='card-header text-center font-weight-bold text-uppercase py-4'>Inventory Transfer</h3>
+        <div class='card-body'>
+            <div id='table' class='table'> 
+                <span class='table-add float-right mb-3 mr-2'>
+                    <button class='btn btn-success btn-rounded btn-sm my-0' onClick='addInventoryItem();'>Add Inventory Item</button>
+                </span>
+                <table id='tableInventory' class='table table-bordered table-responsive-md table-striped text-center'>
+                    <thead>
+                        <tr>
+                            <th class='text-center'>Inventory Item</th>
+                            <th class='text-center'>Quanity</th>
+                            <th class='text-center'>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody id='tableBody'></tbody>
+                </table>
+                <div>
+                    <span class='table-add float-right mb-3 mr-2'>
+                        <button type='button' onClick='removeInventory();' class='btn btn-success btn-rounded btn-sm my-0'>Transfer Inventory</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='formLabel'>Custom Form *</div> 
+    <select class='browser-default custom-select'>
+        <option selected>Custom Inventory Transfer</option>
+        <option value='1'>One</option>
+        <option value='2'>Two</option>
+        <option value='3'>Three</option>
+    </select>
+    <div class='formLabel'>Select Date</div>
+    <div class='md-form'> 
+        <input placeholder='' type='text' id='date-picker-example' class='form-control datepicker'>
+        <label for='date-picker-example'></label>
+    </div>
+    <div class='formLabel'>Posting Period</div> 
+    <select class='browser-default custom-select'>
+        <option selected>Open this select menu</option>
+        <option value='1'>One</option>
+        <option value='2'>Two</option>
+        <option value='3'>Three</option>
+    </select>
+    <div class='formLabel'>Subsidiary</div> 
+    <select class='browser-default custom-select'>
+        <option selected>Open this select menu</option>
+        <option value='1'>One</option>
+        <option value='2'>Two</option>
+        <option value='3'>Three</option>
+    </select>
+    <div class='formLabel'>Ref Number:</div>
+    <div class='formLabel'>To Be Generated</div>
+    <div class='formLabel'>Memo</div>
+    <div class='form-group'> 
+        <label for='exampleFormControlTextarea2'></label>
+        <textarea class='form-control rounded-0'id='exampleFormControlTextarea2' rows='3'></textarea>
+    </div>
+    <div class='formLabel'>From Location</div> 
+        <select class='browser-default custom-select'>
+            <option selected>Open this select menu</option>
+            <option value='1'>One</option>
+            <option value='2'>Two</option>
+            <option value='3'>Three</option>
+        </select>
+    <div class='formLabel'>To Location</div> <select class='browser-default custom-select'>
+        <option selected>Open this select menu</option>
+        <option value='1'>One</option>
+        <option value='2'>Two</option>
+        <option value='3'>Three</option>
+    </select>
+    <div class='formLabel'>Customer Type</div>
+    <div class='form-group'> 
+        <label for='exampleFormControlTextarea2'></label>
+        <textarea class='form-control rounded-0' id='exampleFormControlTextarea2' rows='3'></textarea>
+    </div>
+</div>
+<div id=contentToChange>
+    <button type='button' class='btn btn-dark btn-lg btn-block' onClick='goMenu();'>Menu Page</button>
+    <button type='button' class='btn btn-dark btn-lg btn-block' onClick='goCatalogue();'> Go to Catalog Page</button>
+    <div id=user class='mx-auto'></div>
+</div>

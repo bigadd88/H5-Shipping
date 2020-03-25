@@ -1,0 +1,189 @@
+function P44getRatepass(request, response) {
+    //get parent record
+    var recId = request.getParameter('requrl');
+    var batId = request.getParameter('batid');
+    var parentShipment = nlapiLoadRecord('customrecord_h5_shipment', recId);
+    var pkgcount = [];
+    var nmfcNum = [];
+    var nmfcShortLine = [];
+    var pkgFreightClass = [];
+    var packType = [];
+    var pkgNumber = [];
+    var pkgWeight = [];
+    var pkgnmfcLineNum = [];
+    var pkgLength = [];
+    var pkgWidth = [];
+    var pkgHeight = [];
+    var fil = [];
+        fil[0] = new nlobjSearchFilter('custrecord_h5_shipment_parent', null, 'is', recId);
+    var col = [];
+        col[0] = new nlobjSearchColumn('custrecord_h5_hazmat');
+        col[1] = new nlobjSearchColumn('custrecord_h5_nmfc_number');
+        col[2] = new nlobjSearchColumn('custrecord_h5_freight_class_value');
+        col[3] = new nlobjSearchColumn('custrecord_h5_packagetype');
+        col[4] = new nlobjSearchColumn('custrecord_h5_ pkgnumber');
+        col[5] = new nlobjSearchColumn('custrecord_h5_weight');
+        col[6] = new nlobjSearchColumn('custrecord_h5_nmfc_number_line');
+          col[7] = new nlobjSearchColumn('custrecord_h5_length');
+          col[8] = new nlobjSearchColumn('custrecord_h5_width');
+          col[9] = new nlobjSearchColumn('custrecord_h5_height');
+    var packages = nlapiSearchRecord('customrecord_h5_shipment_line', null, fil, col);
+        for (var x = 0; x < packages.length; x++){
+        pkgcount.push(packages[x].getValue('custrecord_h5_pkgnumber'));
+        pkgFreightClass.push(packages[x].getValue('custrecord_h5_freight_class_value'));
+        pkgWeight.push(packages[x].getValue('custrecord_h5_weight'));
+        pkgLength.push(packages[x].getValue('custrecord_h5_length'));
+        pkgWidth.push(packages[x].getValue('custrecord_h5_width'));
+        pkgHeight.push(packages[x].getValue('custrecord_h5_height'));
+        }
+    var pkgcnt = Math.max.apply(null,pkgcount);
+    //generate Base64 credential key
+    var creds = 'priority.prod@p-44.com:Prirate18';
+    var enCreds = nlapiEncrypt(creds, 'base64');
+    //p44 endPoint URL for Rating
+    var url = 'https://cloud.p-44.com/api/v3/quotes/rates/query';
+    //setting request headers
+    var headers = [];
+    headers['Authorization'] = 'Basic ' + enCreds;
+    headers['Content-Type'] = 'application/json';
+    headers['Accept'] = 'application/json';
+    //get Origin and Destination Info
+    //var originEntId = parentShipment.getFieldValue('custrecord_h5_shipper');
+    //var originEnt = nlapiLoadRecord('vendor', originEntId);
+    var originCountry = parentShipment.getFieldValue('custrecord_h5_shipper_country');
+    var originZip = parentShipment.getFieldValue('custrecord_h5_shipper_zip');
+    var origAddr1 = parentShipment.getFieldValue('custrecord_h5_shipper_addr1');
+    var origCity = parentShipment.getFieldValue('custrecord_h5_shipper_city');
+    var origState = parentShipment.getFieldValue('custrecord_h5_shipper_state');
+    //var destEntId = parentShipment.getFieldValue('custrecord_h5_consignee');
+    //var destEnt = nlapiLoadRecord('customer', destEntId);
+      var consigneeAddressee = parentShipment.getFieldValue('custrecord_h5_consignee_addree');
+      var consigneeAddr1 = parentShipment.getFieldValue('custrecord_h5_consingee_addr1');
+      var consigneeCity = parentShipment.getFieldValue('custrecord_h5_consignee_city');
+      var consigneeState = parentShipment.getFieldValue('custrecord_h5_consignee_state');
+      var consigneeZip = parentShipment.getFieldValue('custrecord_h5_consignee_zip');
+      var consigneeCountry = parentShipment.getFieldValue('custrecord_h5_consignee_country');
+    //var destZip = parentShipment.getFieldValue('custrecord_h5_consignee_zip');
+    //var destAddr1 = parentShipment.getFieldValue('custrecord_h5_consingee_addr1');
+    //var destCity = parentShipment.getFieldValue('custrecord_h5_consignee_city');
+    //var destState = parentShipment.getFieldValue('custrecord_h5_consignee_state');
+    var shipmentDate = parentShipment.getFieldValue('custrecord_h5_ship_date');
+    var linItems = [];
+    for (var y = 0; y < packages.length; y++){
+          linItems.push({"freightClass": pkgFreightClass[y], "totalWeight": pkgWeight[y], "packageDimensions": {"length": pkgLength[y], "width": pkgWidth[y], "height": pkgHeight[y]}});
+    }
+    var accessorials = GetP44Accessorials(parentShipment);
+    var jPayload = {
+    "originAddress": {
+      "postalCode": originZip,
+      "addressLines":[
+        origAddr1
+      ],
+      "city": origCity,
+      "state": origState,
+      "country": originCountry
+    },
+    "destinationAddress": {
+      "postalCode": consigneeZip,
+      "addressLines":[
+          consigneeAddr1
+      ],
+      "city": consigneeCity,
+      "state": consigneeState,
+      "country": consigneeCountry
+    },
+    "lineItems": linItems,
+    "capacityProviderAccountGroup":{
+      "code": ""
+    },
+    "accessorialServices": accessorials,
+    "apiConfiguration":{
+      "timeout": 20,
+      "enableUnitConversion": false,
+      "accessorialServiceConfiguration": {
+          "fetchAllServiceLevels": false,
+          "fetchAllGuaranteed": false,
+          "fetchAllExcessiveLength": false,
+          "fetchAllInsideDelivery": false,
+          "allowUnacceptedAccessorials": true
+      },
+      "fallBackToDefaultAccountGroup": false
+      }
+    }
+  
+    var strPayload = JSON.stringify(jPayload);
+    nlapiLogExecution('DEBUG', 'Payload', strPayload);
+    nlapiLogExecution('DEBUG', 'BeforeRequestSent', 'Requesting Record ID: ' + recId);
+    var response = nlapiRequestURL(url, strPayload, headers, 'POST');
+    nlapiLogExecution('DEBUG', 'Response', response.getBody());
+    var obj = response.getBody();
+    var respObj = JSON.parse(obj);
+    var rates = respObj.rateQuotes;
+    nlapiLogExecution('DEBUG', 'Post Request Processing', rates[0].rateQuoteDetail.total);
+    //This is looped through the response and get indivual rates and create rate passes
+    nlapiLogExecution('DEBUG', 'Number of Rates Created', rates.length + ' rates created.' );
+    var TotalShipmentCost = [];
+    var CarrierQuoteNo = [];
+    var SCAC = [];
+    var TransitDays = [];
+    var serviceLevel = [];
+    for (i = 0; i < rates.length; i++) {
+      if (rates[i].hasOwnProperty('rateQuoteDetail')){
+        //var accessorialCodes = obj.rateQuote[i].AccessorialCharges.AccessorialCode;
+        //var accessorialRates = obj.rateQuote[i].AccessorialCharges.AccessorialRate;
+        //var carrier = obj.rateQuote[i].CarrierName;
+        TotalShipmentCost.push(rates[i].rateQuoteDetail.total);
+        CarrierQuoteNo.push(rates[i].capacityProviderQuoteNumber);
+        //var CarrierType = obj.rateQuote[i].CarrierType;
+        //var Discount = obj.rateQuote[i].Discount;
+        //var DiscountRate = obj.rateQuote[i].DiscountRate;
+        //var ErrorMessage = obj.rateQuote[i].ErrorMessage;
+        //var FuelSurcharge = obj.rateQuote[i].FuelSurcharge;
+        //var GrossCharge = obj.rateQuote[i].GrossCharge;
+        //var LaneName = obj.rateQuote[i].LaneName;
+        //var NetCharge = obj.rateQuote[i].NetCharge;
+        //var PaymentType = obj.rateQuote[i].PaymentType;
+        //SAASQuoteNumber = rates[i].capacityProviderQuoteNumber;
+        SCAC.push(rates[i].carrierCode);
+        serviceLevel.push(rates[i].serviceLevel.description);
+      if (rates[i].hasOwnProperty('transitDays')){TransitDays.push(rates[i].transitDays);} else {TransitDays.push(0);}
+        //var RateType = obj.rateQuote[i].RateType;
+        var accessorialsRated = '';//accessorialCodes + ',' + accessorialRates;
+        nlapiLogExecution('DEBUG', 'Addison Debugging Line 290');
+        var rateLine = nlapiCreateRecord('customrecord_h5_ratepass_line');
+        rateLine.setFieldValue('custrecord_h5_batch_id', batId);
+        rateLine.setFieldValue('custrecord_h5_ratepass_shipment_id', recId);
+        rateLine.setFieldValue('custrecord_h5_ratepass_id', i + 1);
+        rateLine.setFieldValue('custrecord_h5_carrier_quote_num', CarrierQuoteNo[i]);
+        //rateLine.setFieldValue('custrecord_h5_discount', Discount);
+        //rateLine.setFieldValue('custrecord_h5_discount_rate', DiscountRate);
+        //rateLine.setFieldValue('custrecord_h5_error_message', ErrorMessage);
+        //rateLine.setFieldValue('custrecord_h5_fuel_surcharge', FuelSurcharge);
+        //rateLine.setFieldValue('custrecord_h5_gross_charge', GrossCharge);
+        //rateLine.setFieldValue('custrecord_h5_lane_name', LaneName);
+        //rateLine.setFieldValue('custrecord_h5_netcharge', NetCharge);
+        //rateLine.setFieldValue('custrecord_h5_payment_type', PaymentType);
+        //rateLine.setFieldValue('custrecord_h5_saas_quote_num', SAASQuoteNumber);
+        rateLine.setFieldValue('custrecord_h5_scac', SCAC[i]);
+        nlapiLogExecution('DEBUG', 'Addison Debugging Line 306');
+        rateLine.setFieldValue('custrecord_h5_service_level_desc', serviceLevel[i]);
+        rateLine.setFieldValue('custrecord_h5_total_shipment_cost', TotalShipmentCost[i]);
+      
+        rateLine.setFieldValue('custrecord_h5_transit_days', TransitDays[i]);
+        //rateLine.setFieldValue('custrecord_h5_ratepass_carrier', carrier);
+        rateLine.setFieldValue('custrecord_h5_ratepass_total_cost', TotalShipmentCost[i]);
+        rateLine.setFieldValue('custrecord_h5_ratepass_origin_zip', originZip);
+        rateLine.setFieldValue('custrecord_h5_ratepass_destination_zip', consigneeZip);
+        //rateLine.setFieldValue('custrecord_h5_ratepass_pf_code', profileCode);
+        //rateLine.setFieldValue('custrecord_h5_ratepass_client_code', clientCode);
+        //rateLine.setFieldValue('custrecord_h5_acc_rated', accessorialsRated);
+        //rateLine.setFieldValue('custrecord_h5_CarrierType', CarrierType);
+        nlapiLogExecution('DEBUG', 'Before rateline submit  319');
+        nlapiSubmitRecord(rateLine);
+        nlapiLogExecution('DEBUG', 'After rateline submit  321');
+      }
+      }
+    nlapiLogExecution('DEBUG', 'RatePass Created!', response.getBody());
+    nlapiLogExecution('DEBUG', 'AfterRequestSent', response.getCode());
+    return response.getCode();
+  }
