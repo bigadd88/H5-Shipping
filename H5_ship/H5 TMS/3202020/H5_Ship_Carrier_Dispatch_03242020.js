@@ -52,6 +52,8 @@ var includeBol = parentShipment.getFieldValue();
 var includedBolPdf = parentShipment.getFieldValue();
 //#endregion
 
+//adding test line for PUSH
+
 xml += '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">';
 xml += '<soap:Body>';
 xml += '<CreatePickupRequest xmlns="http://www.rlcarriers.com/">';
