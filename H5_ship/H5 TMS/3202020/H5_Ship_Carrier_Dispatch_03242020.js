@@ -4,8 +4,8 @@ var recId = request.getParameter('reqId');
 var batId = request.getParameter('batchId');
 
 //Load shipment record to dom so you can get field values to send to R&L
-var parentShipment = nlapiLoadRecord('customrecord_h5_shipment', recId);
-var url = 'https://api.rlcarriers.com/sandbox/BillOfLadingService.asmx'; //SANDBOX
+var parentShipment = nlapiLoadRecord('customrecord_h5_shipment', 7);
+var url = 'https://api.rlcarriers.com/sandbox/PickupRequestService.asmx'; //SANDBOX
 var xml = '';
 
 
@@ -25,8 +25,10 @@ var shipContactName = 'Robert';//parentShipment.getFieldValue('custrecord_h5_shi
 var shipContactEmail = 'robert@habit5.com';//parentShipment.getFieldValue('custrecord_h5_shipper');
 //#endregion
 
+
+
 //#region Contact Data
-var contactName = parentShipment.getFieldValue('custrecord_h5_consignee');
+var contactName = 'Addison';
 var contactCompanyName = 'Line-X';//parentShipment.getFieldValue();
 var contactPhoneNumber = '8169061212';//parentShipment.getFieldValue();
 var contactPhoneExt = '244';//parentShipment.getFieldValue();
@@ -34,27 +36,39 @@ var contactEmail = 'addison@habit5.com';//parentShipment.getFieldValue();
 //#endregion
 
 //#region Pickup Data
-var pickupDate;
-var pickupTime;
-var pickupCloseTime;
-var pickupAdditionalInstructions;
+var pickupDate = parentShipment.getFieldValue('custrecord_h5_ship_date');
+var pickupTime = '03:00 PM';
+var pickupCloseTime = '05:00 PM';
+var pickupAdditionalInstructions = 'None';
 //#endregion
 
 //#region LiftOrRoll, serviceLvl, hourlyWindow, linkedBolOrPdf
-var liftGateorNoRollUp1 = parentShipment.getFieldValue();
-var liftGateorNoRollUp2 = parentShipment.getFieldValue();
-var serviceLevel = parentShipment.getFieldValue();
-var hourlyWindowStart = parentShipment.getFieldValue();
-var hourlyWindowStart = parentShipment.getFieldValue();
-var exepditedQuoteNumber = parentShipment.getFieldValue();
-var linkedBolId = parentShipment.getFieldValue();
-var includeBol = parentShipment.getFieldValue();
-var includedBolPdf = parentShipment.getFieldValue();
+// var liftGateorNoRollUp1 = parentShipment.getFieldValue();
+// var liftGateorNoRollUp2 = parentShipment.getFieldValue();
+// var serviceLevel = parentShipment.getFieldValue();
+// var hourlyWindowStart = parentShipment.getFieldValue();
+// var hourlyWindowStart = parentShipment.getFieldValue();
+// var exepditedQuoteNumber = parentShipment.getFieldValue();
+// var linkedBolId = parentShipment.getFieldValue();
+// var includeBol = parentShipment.getFieldValue();
+// var includedBolPdf = parentShipment.getFieldValue();
 //#endregion
 
+//#region Desination
+var destCountry = parentShipment.getFieldValue('custrecord_h5_consignee_addr1');
+var destCode = parentShipment.getFieldValue('custrecord_h5_consignee_zip');
+var destCity = parentShipment.getFieldValue('custrecord_h5_consignee_city');
+var destState = parentShipment.getFieldValue('custrecord_h5_consignee_state');
+
+//add loop to go through shipment lines to get total destWeight and destPieces
+var destWeight = parentShipment.getFieldValue('custrecord_h5_shipper_address1');
+var destPieces = parentShipment.getFieldValue('custrecord_h5_shipper_address1');
+//#endregion
 //adding test line for PUSH
 
 //added testing line again
+
+
 
 xml += '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">';
 xml += '<soap:Body>';
@@ -83,31 +97,41 @@ xml += '<PhoneExtension>' + contactPhoneExt + '</PhoneExtension>';
 xml += '<EmailAddress>' + contactEmail + '</EmailAddress>';
 xml += '</Contact>';
 xml += '<Destinations>';
-xml += '<Destination xsi:nil="true" />';
-xml += '<Destination xsi:nil="true" />';
+xml += '<Destination>';
+xml += '<ISO3Country>'+ destCountry +'</ISO3Country>';
+xml += '<ZipCode>'+ destCode +'</ZipCode>';
+xml += '<City>'+ destCity +'</City>';
+xml += '<State>'+ destState +'</State>';
+xml += '<Weight>'+ destWeight +'</Weight>';
+xml += '<Pieces>'+ destPieces +'</Pieces>';
+xml += '</Destination>';
 xml += '</Destinations>';
 xml += '<PickupInformation>';
 xml += '<PickupDate>' + pickupDate + '</PickupDate>';
 xml += '<ReadyTime>' + pickupTime + '</ReadyTime>';
 xml += '<CloseTime>' + pickupCloseTime + '</CloseTime>';
 xml += '<AdditionalInstructions>' + pickupAdditionalInstructions + '</AdditionalInstructions>';
-xml += '<LoadAttributes xsi:nil="true" />';
+
+xml += '<LoadAttributes>' + pickupDate + '</LoadAttributes>';
+xml += '<LoadAttribute>' + pickupTime + '</LoadAttribute>';
 xml += '</PickupInformation>';
 xml += '<ServiceOptions>';
-xml += '<PURAccessorial>LiftGate or NoRollup</PURAccessorial>';
-xml += '<PURAccessorial>LiftGate or NoRollup</PURAccessorial>';
+//xml += '<PURAccessorial>LiftGate or NoRollup</PURAccessorial>';
+xml += '<PURAccessorial>LiftGate</PURAccessorial>';
 xml += '</ServiceOptions>';
-xml += '<ServiceLevel>StandardService or GuaranteedService or GuaranteedByNoon or GuaranteedHourlyWindow or ExpeditedService or WeekendExpress</ServiceLevel>';
+xml += '<ServiceLevel>StandardService</ServiceLevel>';
 xml += '<HourlyWindow>';
-xml += '<Start>' + hourlyWindowStart + '</Start>';
-xml += '<End>' + hourlyWindowEnd + '</End>';
+xml += '<Start>01:00 PM</Start>';
+xml += '<End>03:00 PM</End>';
 xml += '</HourlyWindow>';
-xml += '<ExpeditedQuoteNumber>' + exepditedQuoteNumber + '</ExpeditedQuoteNumber>';
-xml += '<LinkedBolId>' + linkedBolId + '</LinkedBolId>';
+xml += '<ExpeditedQuoteNumber>1111</ExpeditedQuoteNumber>';
+xml += '<LinkedBolId>22222</LinkedBolId>';
 xml += '</Pickup>';
-xml += '<IncludeBol>' + includeBol + '</IncludeBol>';
-xml += '<IncludeBolPdf>' + includedBolPdf + '</IncludeBolPdf>';
+xml += '<IncludeBol>false</IncludeBol>';
+xml += '<IncludeBolPdf>false</IncludeBolPdf>';
 xml += '</request>';
 xml += '</CreatePickupRequest>';
 xml += '</soap:Body>';
 xml += '</soap:Envelope>';
+
+message = nlapiRequestURL(url, xml, null, null);
